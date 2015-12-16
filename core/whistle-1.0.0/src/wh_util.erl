@@ -1291,7 +1291,6 @@ elapsed_us(Start, Now) when is_integer(Start), is_integer(Now) -> (Now - Start) 
 
 -spec now() -> wh_now().
 
--ifdef(OTP_AT_LEAST_18).
 now() -> erlang:timestamp().
 -spec now_s(any()) -> gregorian_seconds().
 -spec now_ms(any()) -> pos_integer().
@@ -1299,16 +1298,6 @@ now() -> erlang:timestamp().
 now_s(_) ->  erlang:system_time('seconds').
 now_ms(_) -> erlang:system_time('milli_seconds').
 now_us(_) -> erlang:system_time('micro_seconds').
--else.
-now() -> erlang:now().
--spec now_s(wh_now()) -> gregorian_seconds().
--spec now_ms(wh_now()) -> pos_integer().
--spec now_us(wh_now()) -> pos_integer().
-now_s({_,_,_}=Now) -> unix_seconds_to_gregorian_seconds(now_us(Now) div 1000000).
-now_ms({_,_,_}=Now) -> now_us(Now) div ?MILLISECONDS_IN_SECOND.
-now_us({MegaSecs,Secs,MicroSecs}) ->
-    (MegaSecs*1000000 + Secs)*1000000 + MicroSecs.
--endif.
 
 -spec format_date() -> binary().
 -spec format_date(gregorian_seconds()) -> binary().
